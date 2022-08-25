@@ -1,0 +1,297 @@
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .slider__container {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+  }
+
+  .slider {
+    position: absolute;
+    top: 50%;
+    left: 15%;
+    width: 70%;
+    height: 50px;
+    z-index: 20;
+    transform: translateY(-50%);
+  }
+
+  .slider__thumb {
+    position: absolute;
+    top: 0;
+    left: -21px;
+    width: 50px;
+    height: 50px;
+    background-color: #ec2b8f;
+    border-radius: 50px;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .slider__thumb div {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.2s linear;
+    color: #ec2b8f;
+  }
+
+  .slider__track-right div:nth-child(1),
+  .slider__track-left div:nth-child(1) {
+    z-index: 2;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .slider__track-left div:nth-child(1) {
+    left: 25px;
+  }
+
+  .slider__track-right div:nth-child(1) {
+    right: 25px;
+  }
+  
+  .slider__thumb div.active {
+    transition: opacity 0.2s linear 0.2s;
+    opacity: 1;
+  }
+
+  .slider__track {
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .slider__track-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    overflow: hidden;
+  }
+  
+  .slider__track-right {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+    overflow: hidden;
+  }
+  
+  .slider__track-left-inner {
+    background-color: #ffce03;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+  }
+  
+  .slider__track-right-inner {
+    background-color: #67d669;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50px;
+  }
+
+  .slider__text {
+    text-align: center;
+    position: absolute;
+    top: 70px; 
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.2s linear;
+  }
+
+  .slider__text.active {
+    transition: opacity 0.2s linear 0.2s;
+    opacity: 1;
+  }
+
+</style>
+
+<div class="slider__container">
+  <div class="slider">
+    <div class="slider__thumb">
+      <div>Earlier Diagnosis</div>
+      <div>Later Diagnosis</div>
+    </div>
+    <div class="slider__track">
+      <div class="slider__track-left">
+        <div>Great Education</div>
+        <div class="slider__track-left-inner"></div>
+      </div>
+      <div class="slider__track-right">
+        <div>Treatment Needed</div>
+        <div class="slider__track-right-inner"></div>
+      </div>
+    </div>
+    <div class="slider__texts">
+      <div class="slider__text">When patients aren't educated, it's harder to find it early and more treatment is needed.</div>
+      <div class="slider__text">There are two ways to save lives from breast cancer.</div>
+      <div class="slider__text">When patients are educated, it's easier to find it early and less treatment is needed</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function Slider() {
+    var sliderContainer = document.querySelector('.slider__container');
+    var slider = sliderContainer.querySelector('.slider');
+    var thumb = slider.querySelector('.slider__thumb');
+    var texts = slider.querySelectorAll('.slider__text');
+    var thumbDivs = slider.querySelectorAll('.slider__thumb div');
+    var left = slider.querySelector('.slider__track-left-inner');
+    var right = slider.querySelector('.slider__track-right-inner');
+
+    var sliderWidth;
+    var thumbWidth;
+    var containerWidth;
+    var currentX = 0;
+    var initialX;
+    var leftWidth;
+    var xOffset;
+    var screen;
+    var active;
+    var focus = 0.5;
+
+    function init() {
+      resizeHandler();
+      events();
+      reset();
+    }
+
+    function events() {
+      window.addEventListener('resize', resizeHandler);
+      
+      sliderContainer.addEventListener('touchstart', dragStartHandler);
+      sliderContainer.addEventListener('touchend', dragEndHandler);
+      sliderContainer.addEventListener('touchmove', dragHandler);
+
+      sliderContainer.addEventListener('mousedown', dragStartHandler);
+      sliderContainer.addEventListener('mouseup', dragEndHandler);
+      sliderContainer.addEventListener('mousemove', dragHandler);
+      
+      document.addEventListener('mouseleave', dragEndHandler);
+    }
+
+    function resizeHandler() {
+      screen = {
+        width: window.innerWidth, 
+        height: window.innerHeight
+      };
+
+      sliderWidth = slider.clientWidth;
+      thumbWidth = thumb.clientWidth;
+      leftWidth = left.clientWidth;
+      containerWidth = sliderContainer.clientWidth;
+      
+      move();
+    }
+
+    function reset() {
+      xOffset = sliderWidth * focus;
+      currentX = xOffset;
+      
+      move();
+    }
+
+    function dragStartHandler(e) {
+      initialX = e.type === 'touchstart' ? e.touches[0].clientX - xOffset : e.clientX - xOffset;
+
+      if (e.target === thumb) {
+        active = true;
+      }
+    }
+
+    function dragEndHandler(e) {
+      initialX = currentX;
+      active = false;
+      direction = null;
+
+      slider.classList.remove('dragging-left', 'dragging-right');
+    }
+
+    function dragHandler(e) {
+      if (active) {
+        e.preventDefault();
+        
+        var _currentX = e.type === 'touchmove' ? e.touches[0].clientX - initialX : e.clientX - initialX;
+
+        var direction;
+        if (currentX > _currentX) direction = 'left';
+        if (currentX < _currentX) direction = 'right';
+
+        if (direction !== direction) {
+          direction = direction;
+          
+          if (direction === 'left') {
+            slider.classList.remove('dragging-right');
+          } else if (direction === 'right') {
+            slider.classList.remove('dragging-left');
+          }
+
+          slider.classList.add(`dragging-${direction}`);
+        }
+
+        currentX = _currentX;
+        xOffset = currentX;
+        
+        move();
+      }
+    }
+
+    function move() {
+      var x = Math.min(Math.max(currentX, 0), sliderWidth);
+      var percent = x / sliderWidth;
+
+      thumb.style.transform = 'translateX(' + x + 'px)';
+      left.style.transform = 'translateX(' + (x - 28 - sliderWidth) + 'px)';
+      right.style.transform = 'translateX(' + (x + 35) + 'px)';
+
+      if (percent < 0.4) {
+        texts[0].classList.add('active');
+        texts[1].classList.remove('active');
+        texts[2].classList.remove('active');
+        thumbDivs[0].classList.remove('active');
+        thumbDivs[1].classList.add('active');
+        console.log(thumbDivs)
+      } else if (percent > 0.6) {
+        texts[0].classList.remove('active');
+        texts[2].classList.add('active');
+        texts[1].classList.remove('active');
+        thumbDivs[0].classList.add('active');
+        thumbDivs[1].classList.remove('active');
+      } else {
+        texts[0].classList.remove('active');
+        texts[1].classList.add('active');
+        texts[2].classList.remove('active');
+        thumbDivs[0].classList.remove('active');
+        thumbDivs[1].classList.remove('active');
+      }
+    }
+
+    init();
+  }
+
+  new Slider();
+</script>
