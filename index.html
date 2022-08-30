@@ -1,4 +1,5 @@
 <script src="https://use.typekit.net/previewkits/pk-v1.js?t"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.0/gsap.min.js"></script>
 
 <style>
   @font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/fab690/000000000000000077359bed/30/l?subset_id=2&fvd=n5&v=3) format("woff2"),url(https://use.typekit.net/af/fab690/000000000000000077359bed/30/d?subset_id=2&fvd=n5&v=3) format("woff"),url(https://use.typekit.net/af/fab690/000000000000000077359bed/30/a?subset_id=2&fvd=n5&v=3) format("opentype");font-weight:500;font-style:normal;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/b6e4b0/000000000000000077359c3e/30/l?subset_id=2&fvd=n7&v=3) format("woff2"),url(https://use.typekit.net/af/b6e4b0/000000000000000077359c3e/30/d?subset_id=2&fvd=n7&v=3) format("woff"),url(https://use.typekit.net/af/b6e4b0/000000000000000077359c3e/30/a?subset_id=2&fvd=n7&v=3) format("opentype");font-weight:700;font-style:normal;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/b7f08e/000000000000000077359bea/30/l?subset_id=2&fvd=n8&v=3) format("woff2"),url(https://use.typekit.net/af/b7f08e/000000000000000077359bea/30/d?subset_id=2&fvd=n8&v=3) format("woff"),url(https://use.typekit.net/af/b7f08e/000000000000000077359bea/30/a?subset_id=2&fvd=n8&v=3) format("opentype");font-weight:800;font-style:normal;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/6c518c/000000000000000077359be7/30/l?subset_id=2&fvd=i5&v=3) format("woff2"),url(https://use.typekit.net/af/6c518c/000000000000000077359be7/30/d?subset_id=2&fvd=i5&v=3) format("woff"),url(https://use.typekit.net/af/6c518c/000000000000000077359be7/30/a?subset_id=2&fvd=i5&v=3) format("opentype");font-weight:500;font-style:italic;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/228d07/000000000000000077359c44/30/l?subset_id=2&fvd=i7&v=3) format("woff2"),url(https://use.typekit.net/af/228d07/000000000000000077359c44/30/d?subset_id=2&fvd=i7&v=3) format("woff"),url(https://use.typekit.net/af/228d07/000000000000000077359c44/30/a?subset_id=2&fvd=i7&v=3) format("opentype");font-weight:700;font-style:italic;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/cf55ca/000000000000000077359bee/30/l?subset_id=2&fvd=i8&v=3) format("woff2"),url(https://use.typekit.net/af/cf55ca/000000000000000077359bee/30/d?subset_id=2&fvd=i8&v=3) format("woff"),url(https://use.typekit.net/af/cf55ca/000000000000000077359bee/30/a?subset_id=2&fvd=i8&v=3) format("opentype");font-weight:800;font-style:italic;font-stretch:normal;font-display:auto;}
@@ -7,6 +8,9 @@
     position: relative;
     height: 300px;
     width: 100%;
+    max-width: 1024px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .slider {
@@ -94,6 +98,7 @@
     height: 100%;
     border-radius: 50px;
     overflow: hidden;
+    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
   }
   
   .slider__track-right {
@@ -104,6 +109,7 @@
     height: 100%;
     border-radius: 50px;
     overflow: hidden;
+    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
   }
   
   .slider__track-left-inner {
@@ -175,7 +181,7 @@
     <div class="slider__texts">
       <div class="slider__text">When patients aren't educated, it's harder to find it early and more treatment is needed.</div>
       <div class="slider__text">There are two ways to save lives from breast cancer.</div>
-      <div class="slider__text">When patients are educated, it's easier to find it early and less treatment is needed</div>
+      <div class="slider__text">When patients are educated, it's easier to find it early and less treatment is needed.</div>
     </div>
   </div>
 </div>
@@ -185,6 +191,7 @@
     var sliderContainer = document.querySelector('.slider__container');
     var slider = sliderContainer.querySelector('.slider');
     var thumb = slider.querySelector('.slider__thumb');
+    var thumbImage = slider.querySelector('.slider__thumb img');
     var texts = slider.querySelectorAll('.slider__text');
     var thumbDivs = slider.querySelectorAll('.slider__thumb div');
     var left = slider.querySelector('.slider__track-left-inner');
@@ -202,12 +209,28 @@
     var xOffset;
     var screen;
     var active;
+    var animate;
+    var tm;
     var focus = 0.5;
 
     function init() {
       resizeHandler();
       events();
       reset();
+
+      const halfSliderWidth = sliderWidth * 0.5;
+
+      tm = gsap.timeline({
+        repeat: -1,
+        yoyo: true
+      });
+
+      tm.pause();
+      tm.to(thumb, { x: halfSliderWidth - 20, z: 1, duration: 1.5, ease: 'power2.inOut' });
+      tm.to([left, right], { x: '-=20', duration: 1.5, ease: 'power2.inOut' }, '-=1.5');
+      tm.to(thumb, { x: halfSliderWidth + 20, z: 1, duration: 1.5, ease: 'power2.inOut' });
+      tm.to([left, right], { x: '+=40', duration: 1.5, ease: 'power2.inOut' }, '-=1.5');
+      tm.play();
     }
 
     function events() {
@@ -246,6 +269,9 @@
     }
 
     function dragStartHandler(e) {
+      tm.pause();
+      gsap.to(thumbImage, { x: '0%', duration: 1, ease: 'power2.inOut' });
+
       initialX = e.type === 'touchstart' ? e.touches[0].clientX - xOffset : e.clientX - xOffset;
 
       if (e.target === thumb) {
@@ -290,13 +316,15 @@
       }
     }
 
-    function move() {
+    function move(disableThumb) {
       var x = Math.min(Math.max(currentX, 0), sliderWidth);
       var percent = x / sliderWidth;
       
-      thumb.style.transform = 'translateX(' + x + 'px)';
-      left.style.transform = 'translateX(' + (x - 28 - sliderWidth) + 'px)';
-      right.style.transform = 'translateX(' + (x + 35) + 'px)';
+      if (!disableThumb) {
+        thumb.style.transform = 'translateX(' + x + 'px)';
+      }
+      left.style.transform = 'translateX(' + (x - 32 - sliderWidth) + 'px)';
+      right.style.transform = 'translateX(' + (x + 40) + 'px)';
       
       var rightMaskX = (1 - (sliderWidth - x) / sliderWidth + 0.1) * sliderWidth;
       rightTrack.style.clipPath = 'polygon(' + rightMaskX + 'px 0%, 100% 0, 100% 100%, ' + rightMaskX + 'px 100%)';
