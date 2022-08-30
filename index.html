@@ -161,27 +161,27 @@
   <div class="slider">
     <div class="slider__thumb">
       <img src="./kyl-logo.png" alt="Know Your Lemons Logo">
-      <div>Earlier Diagnosis</div>
-      <div>Later Diagnosis</div>
+      <div>earlier diagnosis</div>
+      <div>later diagnosis</div>
     </div>
     <div class="slider__track">
       <div class="slider__track-left">
         <div class="slider__track-text">
-          <div>Great Education</div>
+          <div>fund education</div>
         </div>
         <div class="slider__track-left-inner"></div>
       </div>
       <div class="slider__track-right">
         <div class="slider__track-text">
-          <div>Treatment Needed</div>
+          <div>fund new treatments</div>
         </div>
         <div class="slider__track-right-inner"></div>
       </div>
     </div>
     <div class="slider__texts">
-      <div class="slider__text">When patients aren't educated, it's harder to find it early and more treatment is needed.</div>
-      <div class="slider__text">There are two ways to save lives from breast cancer.</div>
-      <div class="slider__text">When patients are educated, it's easier to find it early and less treatment is needed.</div>
+      <div class="slider__text">more treatment needed, less survival</div>
+      <div class="slider__text">two ways to save lives from breast cancer</div>
+      <div class="slider__text">less treatment needed, better survival</div>
     </div>
   </div>
 </div>
@@ -317,7 +317,7 @@
     }
 
     function move(disableThumb) {
-      var x = Math.min(Math.max(currentX, 0), sliderWidth);
+      var x = Math.min(Math.max(currentX, sliderWidth * 0.2), sliderWidth * 0.8);
       var percent = x / sliderWidth;
       
       if (!disableThumb) {
@@ -329,7 +329,7 @@
       var rightMaskX = (1 - (sliderWidth - x) / sliderWidth + 0.1) * sliderWidth;
       rightTrack.style.clipPath = 'polygon(' + rightMaskX + 'px 0%, 100% 0, 100% 100%, ' + rightMaskX + 'px 100%)';
       
-      var leftMaskX = sliderWidth - sliderWidth * (1 - percent + 0.1);
+      var leftMaskX = sliderWidth - sliderWidth * (1 - percent + 0.05);
       leftTrack.style.clipPath = 'polygon(0% 0%, ' + leftMaskX + 'px 0, ' + leftMaskX + 'px 100%, 0% 100%)';
 
       if (percent < 0.4) {
