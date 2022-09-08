@@ -338,7 +338,8 @@
     }
 
     function move(disableThumb) {
-      var x = Math.min(Math.max(currentX, sliderWidth * 0.2), sliderWidth * 0.8);
+      var x = Math.min(Math.max(currentX, sliderWidth * 0.25), sliderWidth * 0.75);
+
       var percent = x / sliderWidth;
       
       if (!disableThumb) {
