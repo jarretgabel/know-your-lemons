@@ -155,6 +155,27 @@
     opacity: 1;
   }
 
+  @media (max-width: 768px) {
+
+    .slider__container {
+      height: 270px;
+    }
+
+    .slider {
+      width: 100%;
+      left: 0;
+    }
+
+    .slider__track-text {
+      font-size: 18px;
+    }
+
+    .slider__thumb div {
+      font-size: 20px;
+      top: -50px;
+    }
+  }
+
 </style>
 
 <div class="slider__container">
@@ -167,13 +188,13 @@
     <div class="slider__track">
       <div class="slider__track-left">
         <div class="slider__track-text">
-          <div>fund education</div>
+          <div>education</div>
         </div>
         <div class="slider__track-left-inner"></div>
       </div>
       <div class="slider__track-right">
         <div class="slider__track-text">
-          <div>fund new treatments</div>
+          <div>treatment</div>
         </div>
         <div class="slider__track-right-inner"></div>
       </div>
