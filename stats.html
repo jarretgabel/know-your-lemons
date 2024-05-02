@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+    <h2>Company: <span id="company"></span></h2>
+    <p>Mammograms booked: <span id="mammograms">0</span></p>
+    <p>Self-exams performed: <span id="self-exams">0</span></p>
+    <p>Have the early detection app: <span id="early-detection">0</span></p>
+    <p>Stories shared: <span id="stories">0</span></p>
+
+    <div>
+      <p>Top 5 Scorers:</p>
+
+      <ul id="top-5">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script>
+      const company = document.querySelector('#company');
+      const mammograms = document.querySelector('#mammograms');
+      const selfExams = document.querySelector('#self-exams');
+      const earlyDetection = document.querySelector('#early-detection');
+      const stories = document.querySelector('#stories');
+      const top5s = document.querySelectorAll('#top-5 li');
+
+      const mammomgramIndex = 8
+      const selfExamsIndex = 6
+      const earlyDetectionIndex = 10
+      const storiesIndex = 11
+      const firstNameIndex = 2
+      const lastNameIndex = 3
+
+      let mammomgramTotal = 0
+      let selfExamsTotal = 0
+      let earlyDetectionTotal = 0
+      let storiesTotal = 0
+
+      const timeline = gsap.timeline()
+
+      const url = 'https://sheets.googleapis.com/v4/spreadsheets';
+      const sheet = '1NQtTs2ZIxBSopOxug0-b5dIrX662-v0NO9WT-e1Pkzs';
+      const key = 'AIzaSyCBIz_Y8mbGuQXSR3elO3d5KZrYiejBM6s';
+      const sheetName = 'KYL@Work Points'
+
+      const array = {};
+      fetch(`${url}/${sheet}/values/${sheetName}!A1:Z500?key=${key}`)
+        .then(resp => resp.json())
+        .then((data) => {
+          const { values } = data
+
+          const newValues = values.slice(1, values.length - 1)
+
+          newValues.forEach(value => {
+            if (value.length && value[0]) {
+              const company = value[0]
+              if (!array[company]) {
+                array[company] = []
+              }
+
+              array[company].push(value)
+            }
+          })
+
+          company.innerHTML = Object.keys(array)[0]
+
+          mammomgramTotal = Object.values(array)[0].reduce((sum, a) => sum + Number(a[mammomgramIndex]), 0)
+
+          selfExamsTotal = Object.values(array)[0].reduce((sum, a) =>
+          sum + Number(a[selfExamsIndex]), 0)
+
+          earlyDetectionTotal = Object.values(array)[0].reduce((sum, a) =>
+          sum + Number(a[earlyDetectionIndex]), 0)
+
+          storiesTotal = Object.values(array)[0].reduce((sum, a) => {
+            const val = a[storiesIndex] === 'Yes' ? 1 : 0
+            return sum + val
+          }, 0)
+
+          const totalScores = Object.values(array)[0].map((item, index) => {
+            return {
+              index,
+              value: Number(item[mammomgramIndex]) +
+                      Number(item[selfExamsIndex]) +
+                      Number(item[earlyDetectionIndex]) +
+                      (item[storiesIndex] === 'Yes' ? 1 : 0),
+              lastName: item[lastNameIndex]
+            }
+          })
+
+          totalScores.sort((a, b) => b.value - a.value || b.lastName < a.lastName)
+
+          totalScores.forEach((score, index) => {
+            if (index <= 5) {
+              const lineItem = Object.values(array)[0][totalScores[index].index]
+
+              if (top5s[index]) {
+                top5s[index].innerHTML = `${lineItem[firstNameIndex]} ${lineItem[lastNameIndex]}: ${score.value}`
+              }
+            }
+          })
+
+          animate(mammograms, mammomgramTotal)
+          animate(selfExams, selfExamsTotal)
+          animate(earlyDetection, earlyDetectionTotal)
+          animate(stories, storiesTotal)
+        })
+
+        function animate(property, total, delay) {
+          const obj = { val: 0 }
+          timeline.to(obj, {
+            val: total,
+            duration: 1,
+            ease: 'power2.inOut',
+            onUpdate: () => property.innerHTML = Math.round(obj.val)
+          }, '-=.5')
+        }
+
+    </script>
+  </body>
+</html>

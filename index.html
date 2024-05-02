@@ -242,15 +242,100 @@
       const halfSliderWidth = sliderWidth * 0.5;
 
       tm = gsap.timeline({
-        repeat: -1,
-        yoyo: true
+        repeat: -1
       });
 
       tm.pause();
-      tm.to(thumb, { x: halfSliderWidth - 20, z: 1, duration: 1.5, ease: 'power2.inOut' });
-      tm.to([left, right], { x: '-=20', duration: 1.5, ease: 'power2.inOut' }, '-=1.5');
-      tm.to(thumb, { x: halfSliderWidth + 20, z: 1, duration: 1.5, ease: 'power2.inOut' });
-      tm.to([left, right], { x: '+=40', duration: 1.5, ease: 'power2.inOut' }, '-=1.5');
+
+      const obj = { val: 0.5 };
+      
+      tm.to(obj, { 
+        val: 0.25, 
+        duration: 3, 
+        ease: 'power4.inOut',
+        onUpdate: function() {
+          currentX = obj.val * sliderWidth;
+          xOffset = currentX;
+          
+          move(false, true);
+        } 
+      }, '+=1');
+
+      tm.to(obj, { 
+        val: 0.5, 
+        duration: 3, 
+        ease: 'power4.inOut',
+        onUpdate: function() {
+          currentX = obj.val * sliderWidth;
+          xOffset = currentX;
+          
+          move(false, true);
+        } 
+      });
+
+      tm.to(obj, { 
+        val: 0.75,
+        duration: 3, 
+        ease: 'power4.inOut',
+        onUpdate: function() {
+          currentX = obj.val * sliderWidth;
+          xOffset = currentX;
+          
+          move(false, true);
+        } 
+      });
+
+      tm.to(obj, { 
+        val: 0.5, 
+        duration: 3, 
+        ease: 'power4.inOut',
+        onUpdate: function() {
+          currentX = obj.val * sliderWidth;
+          xOffset = currentX;
+          
+          move(false, true);
+        } 
+      });
+
+      // tm.to(thumb, { 
+      //   x: thumbWidth, 
+      //   z: 1, 
+      //   duration: 2, 
+      //   ease: 'power2.inOut'
+      // }, '+=2');
+
+      // tm.call(setText, [0], '-=1');
+
+      // tm.to([left, right], { 
+      //   x: `-=${sliderWidth * 0.5}`, 
+      //   duration: 3, 
+      //   ease: 'power2.inOut'
+      // }, '-=3');
+      
+      // tm.to(thumb, { 
+      //   x: sliderWidth - thumbWidth, 
+      //   z: 1, 
+      //   duration: 3, 
+      //   ease: 'power2.inOut'
+      // }, '+=2');
+
+      // tm.call(setText, [1], '-=1');
+
+      // tm.to([left, right], { 
+      //   x: `+=${sliderWidth * 0.5}`,
+      //   duration: 3, 
+      //   ease: 'power2.inOut'
+      // }, '-=3');
+
+      // tm.to(thumb, { 
+      //   x: sliderWidth * 0.5, 
+      //   z: 1, 
+      //   duration: 2, 
+      //   ease: 'power2.inOut'
+      // }, '+=2');
+
+      // tm.call(setText, [2], '-=2');
+
       tm.play();
     }
 
@@ -337,9 +422,13 @@
       }
     }
 
-    function move(disableThumb) {
+    function move(disableThumb, excludeBounds) {
       var x = Math.min(Math.max(currentX, sliderWidth * 0.25), sliderWidth * 0.75);
 
+      if (excludeBounds) {
+        x = currentX;
+      }
+      
       var percent = x / sliderWidth;
       
       if (!disableThumb) {
@@ -355,18 +444,28 @@
       leftTrack.style.clipPath = 'polygon(0% 0%, ' + leftMaskX + 'px 0, ' + leftMaskX + 'px 100%, 0% 100%)';
 
       if (percent < 0.4) {
+        setText(0);
+      } else if (percent > 0.6) {
+        setText(1);
+      } else {
+        setText(2);
+      }
+    }
+
+    function setText(index) {
+      if (index === 0) {
         texts[0].classList.add('active');
         texts[1].classList.remove('active');
         texts[2].classList.remove('active');
         thumbDivs[0].classList.remove('active');
         thumbDivs[1].classList.add('active');
-      } else if (percent > 0.6) {
+      } else if (index === 1) {
         texts[0].classList.remove('active');
         texts[2].classList.add('active');
         texts[1].classList.remove('active');
         thumbDivs[0].classList.add('active');
         thumbDivs[1].classList.remove('active');
-      } else {
+      } else if (index === 2) {
         texts[0].classList.remove('active');
         texts[1].classList.add('active');
         texts[2].classList.remove('active');
