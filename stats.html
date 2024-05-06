@@ -32,15 +32,26 @@
       </ul>
     </div>
 
+    <div>
+      <p>Company Leaderboard:</p>
+
+      <ul id="company-leaderboard">
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script>
-      const company = document.querySelector('#company');
-      const mammograms = document.querySelector('#mammograms');
-      const selfExams = document.querySelector('#self-exams');
-      const earlyDetection = document.querySelector('#early-detection');
-      const stories = document.querySelector('#stories');
-      const top5s = document.querySelectorAll('#top-5 li');
-      const units = document.querySelectorAll('#units li');
+      const company = document.querySelector('#company')
+      const mammograms = document.querySelector('#mammograms')
+      const selfExams = document.querySelector('#self-exams')
+      const earlyDetection = document.querySelector('#early-detection')
+      const stories = document.querySelector('#stories')
+      const top5s = document.querySelectorAll('#top-5 li')
+      const units = document.querySelectorAll('#units li')
+      const companyLeaderboard = document.querySelectorAll('#company-leaderboard li')
 
       const mammomgramIndex = 8
       const selfExamsIndex = 6
@@ -113,6 +124,7 @@
 
           getTopScorers(currentItemValues, totalScores)
           getTopUnits(currentItemValues, totalScores)
+          getCompanyLeaderboard(array)
 
           animate(mammograms, mammomgramTotal)
           animate(selfExams, selfExamsTotal)
@@ -208,6 +220,29 @@
                 top5s[index].innerHTML = `${lineItem[firstNameIndex]} ${lineItem[lastNameIndex].slice(0, 1)}: ${score.value}`
               }
             }
+          })
+        }
+
+        function getCompanyLeaderboard (array) {
+          const companies = []
+          for (const key in array) {
+            if (Object.hasOwnProperty.call(array, key)) {
+              const element = array[key];
+              const total = element.reduce((sum, item) =>
+                sum + Number(item[mammomgramIndex]) +
+                      Number(item[selfExamsIndex]) +
+                      Number(item[earlyDetectionIndex]) +
+                      (item[storiesIndex] === 'Yes' ? 1 : 0)
+              , 0)
+
+              companies.push({ company: key, total })
+            }
+          }
+
+          companies.sort((a, b) => b.total - a.total || b.company < a.company)
+
+          companyLeaderboard.forEach((company, index) => {
+            company.innerHTML = `${companies[index].company}: ${companies[index].total}`
           })
         }
 
