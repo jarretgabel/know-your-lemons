@@ -5,6 +5,7 @@
   </head>
   <body>
     <h2>Company: <span id="company"></span></h2>
+    <p>Total Actions: <span id="actions">0</span></p>
     <p>Mammograms booked: <span id="mammograms">0</span></p>
     <p>Self-exams performed: <span id="self-exams">0</span></p>
     <p>Have the early detection app: <span id="early-detection">0</span></p>
@@ -45,6 +46,7 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script>
       const company = document.querySelector('#company')
+      const actions = document.querySelector('#actions')
       const mammograms = document.querySelector('#mammograms')
       const selfExams = document.querySelector('#self-exams')
       const earlyDetection = document.querySelector('#early-detection')
@@ -61,6 +63,7 @@
       const lastNameIndex = 3
       const unitsIndex = 1
 
+      let actionsTotal = 0
       let mammomgramTotal = 0
       let selfExamsTotal = 0
       let earlyDetectionTotal = 0
@@ -95,6 +98,13 @@
           company.innerHTML = Object.keys(array)[0]
           const currentItemValues = Object.values(array)[0]
 
+          actionsTotal = currentItemValues.reduce((sum, item) =>
+            sum + Number(item[mammomgramIndex]) +
+                  Number(item[selfExamsIndex]) +
+                  Number(item[earlyDetectionIndex]) +
+                  (item[storiesIndex] === 'Yes' ? 1 : 0)
+          , 0)
+
           mammomgramTotal = currentItemValues.reduce((sum, a) => sum + Number(a[mammomgramIndex]), 0)
 
           selfExamsTotal = currentItemValues.reduce((sum, a) =>
@@ -126,6 +136,7 @@
           getTopUnits(currentItemValues, totalScores)
           getCompanyLeaderboard(array)
 
+          animate(actions, actionsTotal)
           animate(mammograms, mammomgramTotal)
           animate(selfExams, selfExamsTotal)
           animate(earlyDetection, earlyDetectionTotal)
