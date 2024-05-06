@@ -22,6 +22,16 @@
       </ul>
     </div>
 
+    <div>
+      <p>Top 3 Units:</p>
+
+      <ul id="units">
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script>
       const company = document.querySelector('#company');
@@ -30,6 +40,7 @@
       const earlyDetection = document.querySelector('#early-detection');
       const stories = document.querySelector('#stories');
       const top5s = document.querySelectorAll('#top-5 li');
+      const units = document.querySelectorAll('#units li');
 
       const mammomgramIndex = 8
       const selfExamsIndex = 6
@@ -37,6 +48,7 @@
       const storiesIndex = 11
       const firstNameIndex = 2
       const lastNameIndex = 3
+      const unitsIndex = 1
 
       let mammomgramTotal = 0
       let selfExamsTotal = 0
@@ -70,42 +82,37 @@
           })
 
           company.innerHTML = Object.keys(array)[0]
+          const currentItemValues = Object.values(array)[0]
 
-          mammomgramTotal = Object.values(array)[0].reduce((sum, a) => sum + Number(a[mammomgramIndex]), 0)
+          mammomgramTotal = currentItemValues.reduce((sum, a) => sum + Number(a[mammomgramIndex]), 0)
 
-          selfExamsTotal = Object.values(array)[0].reduce((sum, a) =>
+          selfExamsTotal = currentItemValues.reduce((sum, a) =>
           sum + Number(a[selfExamsIndex]), 0)
 
-          earlyDetectionTotal = Object.values(array)[0].reduce((sum, a) =>
+          earlyDetectionTotal = currentItemValues.reduce((sum, a) =>
           sum + Number(a[earlyDetectionIndex]), 0)
 
-          storiesTotal = Object.values(array)[0].reduce((sum, a) => {
+          storiesTotal = currentItemValues.reduce((sum, a) => {
             const val = a[storiesIndex] === 'Yes' ? 1 : 0
             return sum + val
           }, 0)
 
-          const totalScores = Object.values(array)[0].map((item, index) => {
+          const totalScores = currentItemValues.map((item, index) => {
             return {
               index,
               value: Number(item[mammomgramIndex]) +
                       Number(item[selfExamsIndex]) +
                       Number(item[earlyDetectionIndex]) +
                       (item[storiesIndex] === 'Yes' ? 1 : 0),
-              lastName: item[lastNameIndex]
+              firstName: item[firstNameIndex],
+              lastName: item[lastNameIndex],
+              name: `${item[firstNameIndex]} ${item[lastNameIndex]}`,
+              unit: item[unitsIndex]
             }
           })
 
-          totalScores.sort((a, b) => b.value - a.value || b.lastName < a.lastName)
-
-          totalScores.forEach((score, index) => {
-            if (index <= 5) {
-              const lineItem = Object.values(array)[0][totalScores[index].index]
-
-              if (top5s[index]) {
-                top5s[index].innerHTML = `${lineItem[firstNameIndex]} ${lineItem[lastNameIndex]}: ${score.value}`
-              }
-            }
-          })
+          getTopScorers(currentItemValues, totalScores)
+          getTopUnits(currentItemValues, totalScores)
 
           animate(mammograms, mammomgramTotal)
           animate(selfExams, selfExamsTotal)
@@ -121,6 +128,87 @@
             ease: 'power2.inOut',
             onUpdate: () => property.innerHTML = Math.round(obj.val)
           }, '-=.5')
+        }
+
+        function getTopUnits (items, totalScores) {
+          const groupByUnit = totalScores.reduce((group, product) => {
+            const { unit } = product
+            group[unit] = group[unit] ?? []
+            group[unit].push(product)
+            return group
+          }, {})
+
+          const combinedScores = []
+          for (const key in groupByUnit) {
+            if (Object.hasOwnProperty.call(groupByUnit, key)) {
+              let total = 0
+              const element = groupByUnit[key];
+              element.forEach(el => {
+                total += el.value
+              });
+
+              combinedScores.push({
+                index: element[0].index,
+                value: total,
+                firstName: element[0].firstName,
+                lastName: element[0].lastName,
+                name: element[0].name,
+                unit: element[0].unit
+              })
+            }
+          }
+
+          combinedScores.sort((a, b) => b.value - a.value || b.unit < a.unit)
+
+          combinedScores.forEach((score, index) => {
+            if (index <= 3) {
+              const lineItem = items[combinedScores[index].index]
+
+              if (units[index]) {
+                units[index].innerHTML = `${lineItem[unitsIndex]}: ${score.value}`
+              }
+            }
+          })
+        }
+
+        function getTopScorers (items, totalScores) {
+          const groupByName = totalScores.reduce((group, product) => {
+            const { name } = product
+            group[name] = group[name] ?? []
+            group[name].push(product)
+            return group
+          }, {})
+
+          const combinedScores = []
+          for (const key in groupByName) {
+            if (Object.hasOwnProperty.call(groupByName, key)) {
+              let total = 0
+              const element = groupByName[key];
+              element.forEach(el => {
+                total += el.value
+              });
+
+              combinedScores.push({
+                index: element[0].index,
+                value: total,
+                firstName: element[0].firstName,
+                lastName: element[0].lastName,
+                name: element[0].name
+              })
+            }
+          }
+
+          combinedScores.sort((a, b) => b.value - a.value || b.lastName < a.lastName)
+
+          combinedScores.forEach((score, index) => {
+            if (index <= 5) {
+              const lineItem = items[combinedScores[index].index]
+
+              if (top5s[index]) {
+                top5s[index].innerHTML = `${lineItem[firstNameIndex]} ${lineItem[lastNameIndex].slice(0, 1)}: ${score.value}`
+              }
+            }
+          })
         }
 
     </script>
