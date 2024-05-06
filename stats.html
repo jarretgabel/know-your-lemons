@@ -45,7 +45,7 @@
       }
 
       .kyl-stat {
-        margin: 2rem;
+        margin: 2rem 1rem 0 1rem;
       }
 
       .kyl-stat p {
@@ -54,9 +54,18 @@
         font-size: 30px;
         line-height: 1;
         max-width: 200px;
-        height: 60px;
         display: flex;
         align-items: flex-end;
+      }
+
+      @media (min-width: 481px) {
+        .kyl-stat p {
+          height: 60px;
+        }
+
+        .kyl-stat {
+          margin: 2rem;
+        }
       }
 
       .kyl-stat span {
@@ -77,6 +86,13 @@
       .kyl-top-list {
         margin: 1rem 4rem 0;
         text-align: left;
+      }
+
+      @media (max-width: 480px) {
+        .kyl-top-list {
+          width: 100%;
+          margin-top: 2rem;
+        }
       }
 
       .kyl-top-list p {
