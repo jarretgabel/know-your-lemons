@@ -1,46 +1,166 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style>
+      @font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/fab690/000000000000000077359bed/30/l?subset_id=2&fvd=n5&v=3) format("woff2"),url(https://use.typekit.net/af/fab690/000000000000000077359bed/30/d?subset_id=2&fvd=n5&v=3) format("woff"),url(https://use.typekit.net/af/fab690/000000000000000077359bed/30/a?subset_id=2&fvd=n5&v=3) format("opentype");font-weight:500;font-style:normal;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/b6e4b0/000000000000000077359c3e/30/l?subset_id=2&fvd=n7&v=3) format("woff2"),url(https://use.typekit.net/af/b6e4b0/000000000000000077359c3e/30/d?subset_id=2&fvd=n7&v=3) format("woff"),url(https://use.typekit.net/af/b6e4b0/000000000000000077359c3e/30/a?subset_id=2&fvd=n7&v=3) format("opentype");font-weight:700;font-style:normal;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/b7f08e/000000000000000077359bea/30/l?subset_id=2&fvd=n8&v=3) format("woff2"),url(https://use.typekit.net/af/b7f08e/000000000000000077359bea/30/d?subset_id=2&fvd=n8&v=3) format("woff"),url(https://use.typekit.net/af/b7f08e/000000000000000077359bea/30/a?subset_id=2&fvd=n8&v=3) format("opentype");font-weight:800;font-style:normal;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/6c518c/000000000000000077359be7/30/l?subset_id=2&fvd=i5&v=3) format("woff2"),url(https://use.typekit.net/af/6c518c/000000000000000077359be7/30/d?subset_id=2&fvd=i5&v=3) format("woff"),url(https://use.typekit.net/af/6c518c/000000000000000077359be7/30/a?subset_id=2&fvd=i5&v=3) format("opentype");font-weight:500;font-style:italic;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/228d07/000000000000000077359c44/30/l?subset_id=2&fvd=i7&v=3) format("woff2"),url(https://use.typekit.net/af/228d07/000000000000000077359c44/30/d?subset_id=2&fvd=i7&v=3) format("woff"),url(https://use.typekit.net/af/228d07/000000000000000077359c44/30/a?subset_id=2&fvd=i7&v=3) format("opentype");font-weight:700;font-style:italic;font-stretch:normal;font-display:auto;}@font-face{font-family:omnes-pro;src:url(https://use.typekit.net/af/cf55ca/000000000000000077359bee/30/l?subset_id=2&fvd=i8&v=3) format("woff2"),url(https://use.typekit.net/af/cf55ca/000000000000000077359bee/30/d?subset_id=2&fvd=i8&v=3) format("woff"),url(https://use.typekit.net/af/cf55ca/000000000000000077359bee/30/a?subset_id=2&fvd=i8&v=3) format("opentype");font-weight:800;font-style:italic;font-stretch:normal;font-display:auto;}
 
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      .kyl-stats-container h3:after {
+        content: '';
+        width: calc(100% - 2rem);
+        border-bottom: 3px solid white;
+        border-radius: 10px;
+        height: 2px;
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .kyl-stats-container h3 {
+        font-size: 60px;
+        text-align: center;
+        margin: 0;
+        position: relative;
+        padding-bottom: 1rem;
+      }
+
+      .kyl-stats-container {
+        width: 100%;
+        background-color: rgb(250, 229, 74);
+        font-family: omnes-pro;
+        padding: 3rem 0;
+      }
+
+      .kyl-stats {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .kyl-stat {
+        margin: 2rem;
+      }
+
+      .kyl-stat p {
+        width: inline;
+        margin: 0;
+        font-size: 30px;
+        line-height: 1;
+        max-width: 200px;
+        height: 60px;
+        display: flex;
+        align-items: flex-end;
+      }
+
+      .kyl-stat span {
+        font-size: 60px;
+        font-weight: bold;
+        color: rgb(252, 79, 172);
+      }
+
+      .kyl-top-lists {
+        width: 100%;
+        text-align: center;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        text-align: left;
+      }
+
+      .kyl-top-list {
+        margin: 1rem 4rem 0;
+        text-align: left;
+      }
+
+      .kyl-top-list p {
+        font-size: 30px;
+        line-height: 1;
+        margin: 0 0 1rem 0;
+      }
+
+      .kyl-top-list ol {
+        padding-left: 1.75rem;
+        color: black;
+      }
+
+      .kyl-top-list ol,
+      .kyl-top-list li {
+        margin: 0;
+        font-size: 22px;
+      }
+
+      .kyl-top-list li span {
+        color: rgb(252, 79, 172);
+      }
+
+    </style>
   </head>
   <body>
-    <h2>Company: <span id="company"></span></h2>
-    <p>Total Actions: <span id="actions">0</span></p>
-    <p>Mammograms booked: <span id="mammograms">0</span></p>
-    <p>Self-exams performed: <span id="self-exams">0</span></p>
-    <p>Have the early detection app: <span id="early-detection">0</span></p>
-    <p>Stories shared: <span id="stories">0</span></p>
+    <div class="kyl-stats-container">
+      <h3><span id="company"></span> Stats</h3>
+      <div class="kyl-stats">
+        <div class="kyl-stat">
+          <p>Total Actions</p>
+          <span id="actions">0</span>
+        </div>
+        <div class="kyl-stat">
+          <p>Mammograms booked</p>
+          <span id="mammograms">0</span>
+        </div>
+        <div class="kyl-stat">
+          <p>Self-exams performed</p>
+          <span id="self-exams">0</span>
+        </div>
+        <div class="kyl-stat">
+          <p>Have the early detection app</p>
+          <span id="early-detection">0</span>
+        </div>
+        <div class="kyl-stat">
+          <p>Stories shared</p>
+          <span id="stories">0</span>
+        </div>
+      </div>
 
-    <div>
-      <p>Top 5 Scorers:</p>
+      <div class="kyl-top-lists">
+        <div class="kyl-top-list">
+          <p>Top 5 Scorers:</p>
 
-      <ul id="top-5">
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
-    </div>
+          <ol id="top-5">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ol>
+        </div>
 
-    <div>
-      <p>Top 3 Units:</p>
+        <div class="kyl-top-list">
+          <p>Top 3 Units:</p>
 
-      <ul id="units">
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
-    </div>
+          <ol id="units">
+            <li></li>
+            <li></li>
+            <li></li>
+          </ol>
+        </div>
 
-    <div>
-      <p>Company Leaderboard:</p>
+        <div class="kyl-top-list">
+          <p>Company Leaderboard:</p>
 
-      <ul id="company-leaderboard">
-        <li></li>
-        <li></li>
-        <li></li>
-      </ul>
+          <ol id="company-leaderboard">
+            <li></li>
+            <li></li>
+            <li></li>
+          </ol>
+        </div>
+     </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -188,7 +308,7 @@
               const lineItem = items[combinedScores[index].index]
 
               if (units[index]) {
-                units[index].innerHTML = `${lineItem[unitsIndex]}: ${score.value}`
+                units[index].innerHTML = `<span>${lineItem[unitsIndex]}: ${score.value}</span>`
               }
             }
           })
@@ -228,7 +348,7 @@
               const lineItem = items[combinedScores[index].index]
 
               if (top5s[index]) {
-                top5s[index].innerHTML = `${lineItem[firstNameIndex]} ${lineItem[lastNameIndex].slice(0, 1)}: ${score.value}`
+                top5s[index].innerHTML = `<span>${lineItem[firstNameIndex]} ${lineItem[lastNameIndex].slice(0, 1)}: ${score.value}</span>`
               }
             }
           })
@@ -253,7 +373,7 @@
           companies.sort((a, b) => b.total - a.total || b.company < a.company)
 
           companyLeaderboard.forEach((company, index) => {
-            company.innerHTML = `${companies[index].company}: ${companies[index].total}`
+            company.innerHTML = `<span>${companies[index].company}: ${companies[index].total}</span>`
           })
         }
 
