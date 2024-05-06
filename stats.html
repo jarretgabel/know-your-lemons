@@ -147,7 +147,7 @@
           const obj = { val: 0 }
           timeline.to(obj, {
             val: total,
-            duration: 1,
+            duration: .75,
             ease: 'power2.inOut',
             onUpdate: () => property.innerHTML = Math.round(obj.val)
           }, '-=.5')
