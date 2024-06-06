@@ -12,7 +12,6 @@
       .kyl-stats-container h3:after {
         content: '';
         width: 100%;
-        border-bottom: 3px solid white;
         height: 2px;
         position: absolute;
         bottom: 0;
@@ -67,7 +66,17 @@
         }
       }
 
-      .kyl-stat span {
+      .kyl-stat .span {
+        background-color: #ffe817;
+        /* background-color: red; */
+        padding-left: .5rem;
+        padding-right: .5rem;
+        display: inline-block;
+        height: 58px;
+        margin-top: 10px;
+      }
+
+      .kyl-stat .div {
         position: relative;
         text-align: center;
         display: block;
@@ -77,6 +86,7 @@
         padding-right: 12px;
         margin: 0 auto;
         font-size: 55px;
+        line-height: 1;
         font-weight: bold;
         color: rgb(252, 79, 172);
         background-image: url('./empty-lemon.png');
@@ -94,7 +104,6 @@
         text-align: left;
         background-color: rgb(252, 79, 172);
         color: rgb(250, 229, 74);
-        border-top: 2px solid black;
         padding-top: 2rem;
         padding-bottom: 3rem;
       }
@@ -140,23 +149,33 @@
       <div class="kyl-stats">
         <div class="kyl-stat">
           <p>Total Actions</p>
-          <span id="actions">0</span>
+          <div class="div">
+            <div class="span" id="actions">0</div>
+          </div>
         </div>
         <div class="kyl-stat">
           <p>Mammograms booked</p>
-          <span id="mammograms">0</span>
+          <div class="div">
+            <div class="span" id="mammograms">0</div>
+          </div>
         </div>
         <div class="kyl-stat">
           <p>Self-exams performed</p>
-          <span id="self-exams">0</span>
+          <div class="div">
+            <div class="span" id="self-exams">0</div>
+          </div>
         </div>
         <div class="kyl-stat">
           <p>Have the early detection app</p>
-          <span id="early-detection">0</span>
+          <div class="div">
+            <div class="span" id="early-detection">0</div>
+          </div>
         </div>
         <div class="kyl-stat">
           <p>Stories shared</p>
-          <span id="stories">0</span>
+          <div class="div">
+            <div class="span" id="stories">0</div>
+          </div>
         </div>
       </div>
 
